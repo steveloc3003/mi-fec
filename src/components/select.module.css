@@ -1,0 +1,22 @@
+.select {
+  padding: 0.5rem;
+  width: 100%;
+  border: 1px solid var(--light-gray);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.select:focus {
+  outline: 2px solid var(--primary, #2563eb);
+  outline-offset: 2px;
+}
+
+.multiple {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--light-gray);
+  border-radius: 6px;
+  background: #fff;
+}

@@ -1,0 +1,29 @@
+.button {
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  color: var(--white);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.primary {
+  background: var(--green);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  background: var(--light-gray);
+  color: #888;
+  opacity: 0.7;
+}
+
+.button:not(.primary) {
+  background: #f4f4f5;
+  color: #1f2937;
+}
+
+.button:not(.primary):hover:enabled {
+  background: #e5e7eb;
+  color: #111827;
+}
