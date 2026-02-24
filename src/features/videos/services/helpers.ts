@@ -12,6 +12,7 @@ export const pickHighestQualityLabel = (formats: Record<string, { res: string; s
     const size = typeof format.size === 'number' ? format.size : Number(format.size);
     const resValue = typeof format.res === 'string' ? parseInt(format.res, 10) : Number(format.res);
 
+    // Prefer bigger file size; if equal, prefer higher resolution.
     if (size > bestSize || (size === bestSize && resValue > bestRes)) {
       bestSize = size;
       bestRes = resValue;
@@ -33,6 +34,7 @@ export const toProcessedVideos = (authors: Author[], categories: Category[]): Pr
       author: author.name,
       releaseDate: video.releaseDate,
       highestQualityFormat: pickHighestQualityLabel(video.formats),
+      // Drop category ids that do not exist in the category dictionary.
       categories: video.catIds.map((catId) => categoriesById.get(catId)).filter((catName): catName is string => Boolean(catName)),
     }))
   );

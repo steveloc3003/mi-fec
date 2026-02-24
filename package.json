@@ -2,6 +2,9 @@
   "name": "mi-fec",
   "version": "0.1.0",
   "private": true,
+  "notes": {
+    "typescriptCompat": "Pinned to TypeScript 4.9.5 because react-scripts@5 uses an older ESLint/@typescript-eslint stack that breaks on TS 5.x with originalKeywordKind parser errors. Revisit when migrating off CRA or upgrading build tooling."
+  },
   "scripts": {
     "start": "json-server db.json -p 3001 & react-scripts start",
     "build": "react-scripts build",
@@ -12,7 +15,7 @@
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.0.3",
+    "@types/node": "^18.19.76",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "react-router-dom": "^6.28.0",
@@ -21,12 +24,15 @@
     "react-dom": "^19.2.3",
     "react-hook-form": "^7.52.0",
     "react-scripts": "5.0.1",
-    "typescript": "^5.9.3",
+    "typescript": "4.9.5",
     "web-vitals": "^5.1.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.0.0",
     "prettier": "^3.7.4"
+  },
+  "resolutions": {
+    "typescript": "4.9.5"
   },
   "eslintConfig": {
     "extends": [

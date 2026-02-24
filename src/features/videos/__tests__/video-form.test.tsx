@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { waitFor, screen } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
-import { VideoForm } from 'features/videos/pages/editor/video-form';
+import { VideoForm } from 'features/videos/components/video-form';
 import { getAuthors } from 'features/videos/services/authors';
 import { getCategories } from 'features/videos/services/categories';
 import { addVideoToAuthor, updateVideo, getMaxVideoIdForAuthor } from 'features/videos/services/videos';

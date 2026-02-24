@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppLayout } from 'layouts/app-layout';
 import { navRoutes } from 'app/routes';
+import { NotFoundPage } from 'pages/not-found/not-found-page';
 
 export const App = () => (
   <Routes>
@@ -10,7 +11,7 @@ export const App = () => (
       {navRoutes.map(({ path, Component }) => (
         <Route key={path} path={path} element={<Component />} />
       ))}
+      <Route path="*" element={<NotFoundPage />} />
     </Route>
-    <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
 );

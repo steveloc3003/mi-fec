@@ -6,7 +6,7 @@ import { getAuthors } from 'features/videos/services/authors';
 import { getCategories } from 'features/videos/services/categories';
 import { addVideoToAuthor, updateVideo, getMaxVideoIdForAuthor } from 'features/videos/services/videos';
 import { Button, Select } from 'shared/components/index';
-import styles from 'features/videos/pages/editor/video-form.module.css';
+import styles from 'features/videos/components/video-form.module.css';
 
 type VideoFormProps = {
   mode: 'create' | 'edit';

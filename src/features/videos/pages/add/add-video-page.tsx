@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { VideoForm } from 'features/videos/pages/editor/video-form';
+import { VideoForm } from 'features/videos/components/video-form';
 
 export const AddVideoPage = () => {
   const navigate = useNavigate();

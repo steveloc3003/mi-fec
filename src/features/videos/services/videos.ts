@@ -27,11 +27,13 @@ export const getVideoWithAuthor = async (authorId: number, videoId: number): Pro
 };
 
 export const getMaxVideoIdForAuthor = async (_authorId: number): Promise<number> => {
+  // Keep IDs globally unique to avoid edit/delete ambiguity across authors.
   const authors = await fetchAuthors();
   return authors.flatMap((author) => author.videos).reduce((max, video) => (video.id > max ? video.id : max), 0);
 };
 
 export const updateVideo = async (videoId: number, updatedVideo: Video, newAuthorId: number, currentAuthorId: number): Promise<void> => {
+  // Scope lookup to the current author from route params to avoid matching same id under another author.
   const currentAuthor = await fetchAuthorById(currentAuthorId);
   if (!currentAuthor.videos.some((v) => v.id === videoId)) throw new Error('Video not found');
 
@@ -43,7 +45,7 @@ export const updateVideo = async (videoId: number, updatedVideo: Video, newAutho
     return;
   }
 
-  // Move to new author
+  // Cross-author move: remove from current author, then append to destination author.
   const updatedOld = {
     ...currentAuthor,
     videos: currentAuthor.videos.filter((v) => v.id !== videoId),

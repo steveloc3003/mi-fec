@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 
 import { VideoListPage } from 'features/videos/pages/list/video-list-page';
-import { AddVideoPage } from 'features/videos/pages/editor/add-video-page';
-import { EditVideoPage } from 'features/videos/pages/editor/edit-video-page';
+import { AddVideoPage } from 'features/videos/pages/add/add-video-page';
+import { EditVideoPage } from 'features/videos/pages/edit/edit-video-page';
 import { AboutPage } from 'pages/about/about-page';
 import { FaqPage } from 'pages/faq/faq-page';
 

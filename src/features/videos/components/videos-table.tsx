@@ -33,7 +33,7 @@ export const VideosTable = ({ videos, sortField, sortDirection, onSort, onDelete
     {
       key: 'categories',
       header: 'Categories',
-      sortable: true,
+      sortable: false,
       render: (row: ProcessedVideo) => (
         <div className={styles.pills}>
           {row.categories.map((cat) => (

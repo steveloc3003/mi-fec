@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import type { ProcessedVideo, Video } from 'common/interfaces';
 import { getVideoWithAuthor } from 'features/videos/services/videos';
 import { toErrorMessage } from 'shared/utils/errors';
-import { VideoForm } from 'features/videos/pages/editor/video-form';
+import { VideoForm } from 'features/videos/components/video-form';
 
 export const EditVideoPage = () => {
   const { id, authorId: authorIdParam } = useParams();
@@ -18,6 +18,7 @@ export const EditVideoPage = () => {
   const parsedAuthorId = Number(authorIdParam);
 
   useEffect(() => {
+    // Route includes both authorId and id so edit always resolves the exact video record.
     if (!Number.isFinite(videoId) || !Number.isFinite(parsedAuthorId)) {
       setError('Invalid video id.');
       setIsLoading(false);
