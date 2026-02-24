@@ -21,6 +21,7 @@ This project is designed to show:
 - `react-hook-form` (forms + validation)
 - `json-server` (mock REST API)
 - `jest` + `@testing-library/*` (testing)
+- `playwright` (end-to-end testing)
 - CSS Modules (scoped styling)
 
 ## 3. Why These Libraries
@@ -55,6 +56,18 @@ src/
 - Shared code is explicit and reusable
 - Routing is centralized in one place for visibility
 - Tests are colocated by domain for easier coverage tracking
+- Nested backend DTO handling is encapsulated in a dedicated adapter layer
+
+### Videos service architecture
+
+`features/videos/services/` is split by responsibility:
+
+- `api.ts`: raw HTTP calls
+- `adapters.ts`: normalization and author patch builders
+- `helpers.ts`: pure utilities (e.g. highest quality format)
+- `videos.ts`: orchestration/repository-style feature operations
+
+This keeps UI/components independent from backend nested shape (`authors[].videos[]`).
 
 ## 5. API/Data Model
 
@@ -93,6 +106,16 @@ This starts:
 ```bash
 yarn test
 yarn build
+yarn e2e
+yarn e2e:ui
+yarn e2e:headed
+```
+
+E2E setup (first time):
+
+```bash
+yarn install
+npx playwright install
 ```
 
 ## 8. Testing Strategy
@@ -100,10 +123,13 @@ yarn build
 Current tests cover:
 
 - reusable/pure service helper logic
+- adapter logic (normalization + mutation patch builders)
 - service workflows (fetch/map/update/delete behaviors)
+- failure paths (not found, invalid operations, fetch failures)
 - form behavior and submit flows
 - table behavior
 - not-found routing behavior
+- E2E user flows: add/edit/delete + not-found + selected failure cases
 
 ## 9. Important Compatibility Note
 

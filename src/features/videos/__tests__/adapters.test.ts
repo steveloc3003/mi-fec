@@ -53,6 +53,12 @@ describe('videos adapters', () => {
     expect(patch.videos[0].name).toBe('New');
   });
 
+  it('buildAuthorPatchForUpdate throws for unknown video id', () => {
+    const author: Author = { id: 1, name: 'Author', videos: [makeVideo(1, 'Old')] };
+
+    expect(() => buildAuthorPatchForUpdate(author, 99, makeVideo(99, 'New'))).toThrow('Video not found');
+  });
+
   it('buildAuthorPatchForDelete removes a video and throws for unknown id', () => {
     const author: Author = { id: 1, name: 'Author', videos: [makeVideo(1, 'One'), makeVideo(2, 'Two')] };
     const patch = buildAuthorPatchForDelete(author, 1);

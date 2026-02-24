@@ -53,6 +53,13 @@ describe('videos service', () => {
     ]);
   });
 
+  it('getVideos propagates fetch errors', async () => {
+    mockedFetchCategories.mockRejectedValue(new Error('Failed to fetch categories'));
+    mockedFetchAuthors.mockResolvedValue([]);
+
+    await expect(getVideos()).rejects.toThrow('Failed to fetch categories');
+  });
+
   it('addVideoToAuthor appends and saves', async () => {
     const existing = makeVideo(1, 'Old');
     const newVideo = makeVideo(2, 'New');
@@ -121,6 +128,13 @@ describe('videos service', () => {
     });
   });
 
+  it('updateVideo throws when video is not under current author', async () => {
+    mockedFetchAuthorById.mockResolvedValue({ id: 1, name: 'Author One', videos: [makeVideo(8, 'Other')] });
+
+    await expect(updateVideo(2, makeVideo(2, 'Updated'), 1, 1)).rejects.toThrow('Video not found');
+    expect(mockedSaveAuthor).not.toHaveBeenCalled();
+  });
+
   it('deleteVideo removes video from the specified author', async () => {
     mockedFetchAuthorById.mockResolvedValue({
       id: 1,
@@ -135,5 +149,16 @@ describe('videos service', () => {
       name: 'Author One',
       videos: [makeVideo(3, 'Three')],
     });
+  });
+
+  it('deleteVideo throws when target video does not exist on author', async () => {
+    mockedFetchAuthorById.mockResolvedValue({
+      id: 1,
+      name: 'Author One',
+      videos: [makeVideo(3, 'Three')],
+    });
+
+    await expect(deleteVideo(99, 1)).rejects.toThrow('Video not found');
+    expect(mockedSaveAuthor).not.toHaveBeenCalled();
   });
 });
