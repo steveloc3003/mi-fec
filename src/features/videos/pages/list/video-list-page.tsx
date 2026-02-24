@@ -3,11 +3,14 @@ import { useEffect, useMemo, useState } from 'react';
 import type { ProcessedVideo } from 'common/interfaces';
 import { getVideos, deleteVideo } from 'features/videos/services/videos';
 import { VideosTable, SortDirection, SortField } from 'features/videos/components/videos-table';
-import { Button } from 'components/button';
-import styles from 'features/videos/styles/video-list.module.css';
+import { Button } from 'shared/components/button/button';
+import { toErrorMessage } from 'shared/utils/errors';
+import styles from 'features/videos/pages/list/video-list-page.module.css';
 
 export const VideoListPage = () => {
   const [videos, setVideos] = useState<ProcessedVideo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [committedSearch, setCommittedSearch] = useState('');
   const [sortField, setSortField] = useState<SortField>('name');
@@ -24,10 +27,21 @@ export const VideoListPage = () => {
     );
   }, [videos, committedSearch]);
 
-  const refreshVideos = () => getVideos().then(setVideos);
+  const refreshVideos = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const nextVideos = await getVideos();
+      setVideos(nextVideos);
+    } catch (fetchError) {
+      setError(toErrorMessage(fetchError, 'Failed to load videos.'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    refreshVideos();
+    void refreshVideos();
   }, []);
 
   const sorted = useMemo(() => {
@@ -60,42 +74,51 @@ export const VideoListPage = () => {
   }, [filtered, sortField, sortDirection]);
 
   const handleSort = (field: SortField) => {
-    setSortField((currentField) => {
-      if (currentField === field) {
-        setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-        return currentField;
-      }
-      setSortDirection('asc');
-      return field;
-    });
+    if (field === sortField) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+      return;
+    }
+
+    setSortField(field);
+    setSortDirection('asc');
   };
 
-  const handleDelete = async (id: number) => {
-    await deleteVideo(id);
-    refreshVideos();
+  const handleDelete = async (id: number, authorId: number) => {
+    try {
+      await deleteVideo(id, authorId);
+      await refreshVideos();
+    } catch (deleteError) {
+      setError(toErrorMessage(deleteError, 'Failed to delete video.'));
+    }
   };
 
   return (
     <>
       <h1>VManager Demo v0.0.1</h1>
-      <form
-        className={styles['search-container']}
-        onSubmit={(event) => {
-          event.preventDefault();
-          setCommittedSearch(search);
-        }}>
-        <input
-          type="search"
-          className={styles['search-input']}
-          placeholder="Search by name, author, category..."
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        <Button className={styles['search-button']} type="submit">
-          Search
-        </Button>
-      </form>
-      <VideosTable videos={sorted} sortField={sortField} sortDirection={sortDirection} onSort={handleSort} onDelete={handleDelete} />
+      {error && <p role="alert">{error}</p>}
+      {isLoading && <p>Loading videos...</p>}
+      {!isLoading && (
+        <form
+          className={styles['search-container']}
+          onSubmit={(event) => {
+            event.preventDefault();
+            setCommittedSearch(search);
+          }}>
+          <input
+            type="search"
+            className={styles['search-input']}
+            placeholder="Search by name, author, category..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+          <Button className={styles['search-button']} type="submit">
+            Search
+          </Button>
+        </form>
+      )}
+      {!isLoading && (
+        <VideosTable videos={sorted} sortField={sortField} sortDirection={sortDirection} onSort={handleSort} onDelete={handleDelete} />
+      )}
     </>
   );
 };

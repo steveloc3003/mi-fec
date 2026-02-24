@@ -1,9 +1,9 @@
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 import styles from 'app.module.css';
+import { navRoutes } from 'app/routes';
 import appLayoutStyles from './app-layout.module.css';
-import { Button } from 'components/button';
-import { navRoutes } from 'features/videos/routes';
+import { Button } from 'shared/components/button/button';
 
 export const AppLayout = () => {
   const navigate = useNavigate();
@@ -15,15 +15,17 @@ export const AppLayout = () => {
         <div className={appLayoutStyles.bar}>
           <span className={appLayoutStyles.brand}>Videos</span>
           <nav className={appLayoutStyles.nav}>
-            {navRoutes.map(({ navPath, label, navEnd }) => (
-              <NavLink
-                key={navPath}
-                end={navEnd ?? false}
-                className={({ isActive }) => (isActive ? appLayoutStyles['link-active'] : appLayoutStyles.link)}
-                to={navPath}>
-                {label}
-              </NavLink>
-            ))}
+            {navRoutes
+              .filter((route) => route.showInNav !== false)
+              .map(({ navPath, label, navEnd }) => (
+                <NavLink
+                  key={navPath}
+                  end={navEnd ?? false}
+                  className={({ isActive }) => (isActive ? appLayoutStyles['link-active'] : appLayoutStyles.link)}
+                  to={navPath}>
+                  {label}
+                </NavLink>
+              ))}
           </nav>
         </div>
         {showAddButton && (

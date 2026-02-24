@@ -2,12 +2,20 @@ import { render } from '@testing-library/react';
 import { waitFor, screen } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
-import { VideoForm } from '../pages/add/video-form';
-import { addVideoToAuthor, updateVideo, getAuthors, getCategories, getMaxVideoIdForAuthor } from '../services';
+import { VideoForm } from 'features/videos/pages/editor/video-form';
+import { getAuthors } from 'features/videos/services/authors';
+import { getCategories } from 'features/videos/services/categories';
+import { addVideoToAuthor, updateVideo, getMaxVideoIdForAuthor } from 'features/videos/services/videos';
 
-jest.mock('../services', () => ({
+jest.mock('features/videos/services/authors', () => ({
   getAuthors: jest.fn(),
+}));
+
+jest.mock('features/videos/services/categories', () => ({
   getCategories: jest.fn(),
+}));
+
+jest.mock('features/videos/services/videos', () => ({
   addVideoToAuthor: jest.fn(),
   updateVideo: jest.fn(),
   getMaxVideoIdForAuthor: jest.fn(),
@@ -90,7 +98,9 @@ describe('VideoForm', () => {
     await userEvent.type(nameInput, 'Updated Name');
     await userEvent.click(screen.getByRole('button', { name: /submit/i }));
 
-    await waitFor(() => expect(mockedUpdateVideo).toHaveBeenCalledWith(10, expect.objectContaining({ name: 'Updated Name' }), 1));
+    await waitFor(() =>
+      expect(mockedUpdateVideo).toHaveBeenCalledWith(10, expect.objectContaining({ name: 'Updated Name' }), 1, 1)
+    );
     expect(onSubmit).toHaveBeenCalled();
   });
 });

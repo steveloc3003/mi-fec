@@ -8,6 +8,7 @@ import type { ProcessedVideo } from 'common/interfaces';
 const sampleVideos: ProcessedVideo[] = [
   {
     id: 1,
+    authorId: 1,
     name: 'One',
     author: 'Author One',
     highestQualityFormat: 'one 1080p',
@@ -50,7 +51,7 @@ describe('VideosTable', () => {
 
     await userEvent.click(getByRole('button', { name: /delete/i }));
     expect(confirmSpy).toHaveBeenCalled();
-    expect(onDelete).toHaveBeenCalledWith(1);
+    expect(onDelete).toHaveBeenCalledWith(1, 1);
     confirmSpy.mockRestore();
   });
 });

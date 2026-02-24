@@ -1,7 +1,7 @@
-import styles from '../../app.module.css';
+import styles from 'app.module.css';
 
 export const AboutPage = () => (
-  <div className={styles.topBar}>
+  <div className={styles['top-bar']}>
     <div>
       <h1>About VManager</h1>
       <p>

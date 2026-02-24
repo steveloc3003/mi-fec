@@ -1,7 +1,3 @@
-import type { Category } from 'common/interfaces';
+import { fetchCategories } from './api';
 
-export const getCategories = async (): Promise<Category[]> => {
-  const response = await fetch(`${process.env.REACT_APP_API}/categories`);
-
-  return response.json() as unknown as Category[];
-};
+export const getCategories = fetchCategories;

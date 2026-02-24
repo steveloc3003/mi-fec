@@ -24,6 +24,7 @@ export interface Author {
 
 export interface ProcessedVideo {
   id: number;
+  authorId: number;
   name: string;
   author: string;
   highestQualityFormat: string;

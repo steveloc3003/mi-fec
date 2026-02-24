@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 
 import type { ProcessedVideo, Video } from 'common/interfaces';
-import { getCategories, getAuthors, addVideoToAuthor, updateVideo, getMaxVideoIdForAuthor } from 'features/videos/services';
-import { Button } from 'components/button';
-import { Select } from 'components/select';
-import styles from 'features/videos/styles/video-page.module.css';
+import { getAuthors } from 'features/videos/services/authors';
+import { getCategories } from 'features/videos/services/categories';
+import { addVideoToAuthor, updateVideo, getMaxVideoIdForAuthor } from 'features/videos/services/videos';
+import { Button, Select } from 'shared/components/index';
+import styles from 'features/videos/pages/editor/video-form.module.css';
 
 type VideoFormProps = {
   mode: 'create' | 'edit';
@@ -59,6 +60,7 @@ export const VideoForm = ({ mode, video, initialVideo, initialAuthorId, onSubmit
     });
   }, [initialVideo, initialAuthorId, video, reset]);
 
+  // auto select the first item of author
   useEffect(() => {
     if (!currentAuthor && authorOptions.length > 0) {
       setValue('author', String(authorOptions[0].value));
@@ -79,8 +81,7 @@ export const VideoForm = ({ mode, video, initialVideo, initialAuthorId, onSubmit
         name: values.name,
         catIds: categoryIds,
       };
-      await updateVideo(initialVideo.id, updatedVideo, targetAuthorId);
-      console.info('Video updated successfully');
+      await updateVideo(initialVideo.id, updatedVideo, targetAuthorId, initialAuthorId ?? targetAuthorId);
       onSubmit?.(values);
       return;
     }
@@ -90,6 +91,7 @@ export const VideoForm = ({ mode, video, initialVideo, initialAuthorId, onSubmit
       id: videoId,
       name: values.name,
       catIds: categoryIds,
+      //default for new video
       formats: {
         one: { res: '1080p', size: 1000 },
       },
@@ -97,7 +99,6 @@ export const VideoForm = ({ mode, video, initialVideo, initialAuthorId, onSubmit
     };
 
     await addVideoToAuthor(targetAuthorId, newVideo);
-    console.info('Video added successfully');
     onSubmit?.(values);
   });
 

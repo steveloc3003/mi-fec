@@ -10,7 +10,7 @@ type Option = {
 type BaseProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'value' | 'multiple'> & {
   options: Option[];
   className?: string;
-  onBlur?: () => void;
+  onBlur?: SelectHTMLAttributes<HTMLSelectElement>['onBlur'];
 };
 
 type SingleProps = BaseProps & {
@@ -38,8 +38,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
       onChange(selected);
     };
 
+    const handleBlur = (event: React.FocusEvent<HTMLSelectElement>) => {
+      onBlur?.(event);
+    };
+
     return (
-      <select ref={ref} className={mergedClassName} multiple value={current} onChange={handleMultiChange} onBlur={onBlur} {...rest}>
+      <select ref={ref} className={mergedClassName} multiple value={current} onChange={handleMultiChange} onBlur={handleBlur} {...rest}>
         {options.map((option) => (
           <option key={option.value} value={String(option.value)}>
             {option.label}
@@ -59,8 +63,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
     onChange(event.target.value);
   };
 
+  const handleBlur = (event: React.FocusEvent<HTMLSelectElement>) => {
+    onBlur?.(event);
+  };
+
   return (
-    <select ref={ref} className={mergedClassName} value={normalizedValue} onChange={handleChange} onBlur={onBlur} {...rest}>
+    <select ref={ref} className={mergedClassName} value={normalizedValue} onChange={handleChange} onBlur={handleBlur} {...rest}>
       {options.map((option) => (
         <option key={option.value} value={String(option.value)}>
           {option.label}
