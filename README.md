@@ -115,7 +115,7 @@ E2E setup (first time):
 
 ```bash
 yarn install
-npx playwright install
+yarn playwright install
 ```
 
 ## 8. Testing Strategy
